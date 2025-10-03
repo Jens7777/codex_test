@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { LOGIC_STEPS } from '../utils/templates.js';
+import { ALL_STEP_DEFINITIONS } from '../utils/templates.js';
 
-const stepLookup = LOGIC_STEPS.reduce((acc, step) => {
+const stepLookup = ALL_STEP_DEFINITIONS.reduce((acc, step) => {
   acc[step.key] = step;
   return acc;
 }, {});
@@ -71,6 +71,8 @@ export default function Sidebar({
   const isEdge = Boolean(selectedEdge);
 
   const stepKey = selectedNode?.data?.stepKey;
+  const stepDefinition = stepKey ? stepLookup[stepKey] : undefined;
+  const isContextNode = stepDefinition?.kind === 'context';
 
   const indicatorEntries = useMemo(() => selectedNode?.data?.indicators ?? [], [selectedNode]);
   const assumptionEntries = useMemo(() => selectedNode?.data?.assumptions ?? [], [selectedNode]);
@@ -155,165 +157,169 @@ export default function Sidebar({
                 className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
               />
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-800">{labels.indicators}</h3>
-                <button
-                  type="button"
-                  onClick={() => onIndicatorAdd(selectedNode.id)}
-                  className="text-xs text-sky-600 hover:text-sky-700"
-                >
-                  {labels.addIndicator}
-                </button>
-              </div>
-              <div className="space-y-4">
-                {indicatorEntries.length === 0 && (
-                  <p className="text-xs text-slate-500">
-                    {language === 'sv'
-                      ? 'Inga indikatorer tillagda ännu.'
-                      : 'No indicators added yet.'}
-                  </p>
-                )}
-                {indicatorEntries.map((indicator, index) => (
-                  <div key={indicator.id ?? index} className="rounded-lg border border-slate-200 p-3 space-y-2">
-                    <div className="flex justify-between text-xs font-medium uppercase text-slate-400">
-                      <span>{language === 'sv' ? 'Indikator' : 'Indicator'} #{index + 1}</span>
-                      <button
-                        type="button"
-                        className="text-rose-500 hover:text-rose-600"
-                        onClick={() => onIndicatorRemove(selectedNode.id, indicator.id ?? index)}
-                      >
-                        {labels.remove}
-                      </button>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-medium uppercase text-slate-400">
-                        {labels.title} ({labels.english})
-                      </label>
-                      <input
-                        type="text"
-                        value={indicator.label?.en ?? ''}
-                        onChange={(event) =>
-                          onNodeChange(selectedNode.id, {
-                            indicators: indicatorEntries.map((item, idx) =>
-                              idx === index
-                                ? { ...item, label: { ...item.label, en: event.target.value } }
-                                : item
-                            )
-                          })
-                        }
-                        className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
-                      />
-                      <label className="block text-[11px] font-medium uppercase text-slate-400">
-                        {labels.title} ({labels.swedish})
-                      </label>
-                      <input
-                        type="text"
-                        value={indicator.label?.sv ?? ''}
-                        onChange={(event) =>
-                          onNodeChange(selectedNode.id, {
-                            indicators: indicatorEntries.map((item, idx) =>
-                              idx === index
-                                ? { ...item, label: { ...item.label, sv: event.target.value } }
-                                : item
-                            )
-                          })
-                        }
-                        className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
-                      />
-                      <label className="block text-[11px] font-medium uppercase text-slate-400">
-                        {labels.dataSource}
-                      </label>
-                      <input
-                        type="text"
-                        value={indicator.dataSource ?? ''}
-                        onChange={(event) =>
-                          onNodeChange(selectedNode.id, {
-                            indicators: indicatorEntries.map((item, idx) =>
-                              idx === index
-                                ? { ...item, dataSource: event.target.value }
-                                : item
-                            )
-                          })
-                        }
-                        className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
-                      />
-                    </div>
+            {!isContextNode && (
+              <>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-slate-800">{labels.indicators}</h3>
+                    <button
+                      type="button"
+                      onClick={() => onIndicatorAdd(selectedNode.id)}
+                      className="text-xs text-sky-600 hover:text-sky-700"
+                    >
+                      {labels.addIndicator}
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-800">{labels.assumptions}</h3>
-                <button
-                  type="button"
-                  onClick={() => onAssumptionAdd(selectedNode.id)}
-                  className="text-xs text-sky-600 hover:text-sky-700"
-                >
-                  {labels.addAssumption}
-                </button>
-              </div>
-              <div className="space-y-4">
-                {assumptionEntries.length === 0 && (
-                  <p className="text-xs text-slate-500">
-                    {language === 'sv'
-                      ? 'Inga antaganden tillagda ännu.'
-                      : 'No assumptions added yet.'}
-                  </p>
-                )}
-                {assumptionEntries.map((assumption, index) => (
-                  <div key={assumption.id ?? index} className="rounded-lg border border-slate-200 p-3 space-y-2">
-                    <div className="flex justify-between text-xs font-medium uppercase text-slate-400">
-                      <span>{language === 'sv' ? 'Antagande' : 'Assumption'} #{index + 1}</span>
-                      <button
-                        type="button"
-                        className="text-rose-500 hover:text-rose-600"
-                        onClick={() => onAssumptionRemove(selectedNode.id, assumption.id ?? index)}
-                      >
-                        {labels.remove}
-                      </button>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-medium uppercase text-slate-400">
-                        {labels.description} ({labels.english})
-                      </label>
-                      <textarea
-                        rows={2}
-                        value={assumption.text?.en ?? ''}
-                        onChange={(event) =>
-                          onNodeChange(selectedNode.id, {
-                            assumptions: assumptionEntries.map((item, idx) =>
-                              idx === index
-                                ? { ...item, text: { ...item.text, en: event.target.value } }
-                                : item
-                            )
-                          })
-                        }
-                        className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
-                      />
-                      <label className="block text-[11px] font-medium uppercase text-slate-400">
-                        {labels.description} ({labels.swedish})
-                      </label>
-                      <textarea
-                        rows={2}
-                        value={assumption.text?.sv ?? ''}
-                        onChange={(event) =>
-                          onNodeChange(selectedNode.id, {
-                            assumptions: assumptionEntries.map((item, idx) =>
-                              idx === index
-                                ? { ...item, text: { ...item.text, sv: event.target.value } }
-                                : item
-                            )
-                          })
-                        }
-                        className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
-                      />
-                    </div>
+                  <div className="space-y-4">
+                    {indicatorEntries.length === 0 && (
+                      <p className="text-xs text-slate-500">
+                        {language === 'sv'
+                          ? 'Inga indikatorer tillagda ännu.'
+                          : 'No indicators added yet.'}
+                      </p>
+                    )}
+                    {indicatorEntries.map((indicator, index) => (
+                      <div key={indicator.id ?? index} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                        <div className="flex justify-between text-xs font-medium uppercase text-slate-400">
+                          <span>{language === 'sv' ? 'Indikator' : 'Indicator'} #{index + 1}</span>
+                          <button
+                            type="button"
+                            className="text-rose-500 hover:text-rose-600"
+                            onClick={() => onIndicatorRemove(selectedNode.id, indicator.id ?? index)}
+                          >
+                            {labels.remove}
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-[11px] font-medium uppercase text-slate-400">
+                            {labels.title} ({labels.english})
+                          </label>
+                          <input
+                            type="text"
+                            value={indicator.label?.en ?? ''}
+                            onChange={(event) =>
+                              onNodeChange(selectedNode.id, {
+                                indicators: indicatorEntries.map((item, idx) =>
+                                  idx === index
+                                    ? { ...item, label: { ...item.label, en: event.target.value } }
+                                    : item
+                                )
+                              })
+                            }
+                            className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
+                          />
+                          <label className="block text-[11px] font-medium uppercase text-slate-400">
+                            {labels.title} ({labels.swedish})
+                          </label>
+                          <input
+                            type="text"
+                            value={indicator.label?.sv ?? ''}
+                            onChange={(event) =>
+                              onNodeChange(selectedNode.id, {
+                                indicators: indicatorEntries.map((item, idx) =>
+                                  idx === index
+                                    ? { ...item, label: { ...item.label, sv: event.target.value } }
+                                    : item
+                                )
+                              })
+                            }
+                            className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
+                          />
+                          <label className="block text-[11px] font-medium uppercase text-slate-400">
+                            {labels.dataSource}
+                          </label>
+                          <input
+                            type="text"
+                            value={indicator.dataSource ?? ''}
+                            onChange={(event) =>
+                              onNodeChange(selectedNode.id, {
+                                indicators: indicatorEntries.map((item, idx) =>
+                                  idx === index
+                                    ? { ...item, dataSource: event.target.value }
+                                    : item
+                                )
+                              })
+                            }
+                            className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-slate-800">{labels.assumptions}</h3>
+                    <button
+                      type="button"
+                      onClick={() => onAssumptionAdd(selectedNode.id)}
+                      className="text-xs text-sky-600 hover:text-sky-700"
+                    >
+                      {labels.addAssumption}
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {assumptionEntries.length === 0 && (
+                      <p className="text-xs text-slate-500">
+                        {language === 'sv'
+                          ? 'Inga antaganden tillagda ännu.'
+                          : 'No assumptions added yet.'}
+                      </p>
+                    )}
+                    {assumptionEntries.map((assumption, index) => (
+                      <div key={assumption.id ?? index} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                        <div className="flex justify-between text-xs font-medium uppercase text-slate-400">
+                          <span>{language === 'sv' ? 'Antagande' : 'Assumption'} #{index + 1}</span>
+                          <button
+                            type="button"
+                            className="text-rose-500 hover:text-rose-600"
+                            onClick={() => onAssumptionRemove(selectedNode.id, assumption.id ?? index)}
+                          >
+                            {labels.remove}
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-[11px] font-medium uppercase text-slate-400">
+                            {labels.description} ({labels.english})
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={assumption.text?.en ?? ''}
+                            onChange={(event) =>
+                              onNodeChange(selectedNode.id, {
+                                assumptions: assumptionEntries.map((item, idx) =>
+                                  idx === index
+                                    ? { ...item, text: { ...item.text, en: event.target.value } }
+                                    : item
+                                )
+                              })
+                            }
+                            className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
+                          />
+                          <label className="block text-[11px] font-medium uppercase text-slate-400">
+                            {labels.description} ({labels.swedish})
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={assumption.text?.sv ?? ''}
+                            onChange={(event) =>
+                              onNodeChange(selectedNode.id, {
+                                assumptions: assumptionEntries.map((item, idx) =>
+                                  idx === index
+                                    ? { ...item, text: { ...item.text, sv: event.target.value } }
+                                    : item
+                                )
+                              })
+                            }
+                            className="w-full rounded border border-slate-200 px-3 py-1.5 text-sm"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 

@@ -1,6 +1,7 @@
-export const LOGIC_STEPS = [
+export const CONTEXT_STEPS = [
   {
     key: 'problem',
+    kind: 'context',
     color: {
       border: 'border-logic-problem',
       background: 'bg-logic-problem'
@@ -9,14 +10,19 @@ export const LOGIC_STEPS = [
   },
   {
     key: 'target',
+    kind: 'context',
     color: {
       border: 'border-logic-target',
       background: 'bg-logic-target'
     },
     defaultTitle: { en: 'Target group / Beneficiaries', sv: 'Målgrupp / Förmånstagare' }
-  },
+  }
+];
+
+export const PIPELINE_STEPS = [
   {
     key: 'inputs',
+    kind: 'lane',
     color: {
       border: 'border-logic-inputs',
       background: 'bg-logic-inputs'
@@ -25,6 +31,7 @@ export const LOGIC_STEPS = [
   },
   {
     key: 'activities',
+    kind: 'lane',
     color: {
       border: 'border-logic-activities',
       background: 'bg-logic-activities'
@@ -33,6 +40,7 @@ export const LOGIC_STEPS = [
   },
   {
     key: 'outputs',
+    kind: 'lane',
     color: {
       border: 'border-logic-outputs',
       background: 'bg-logic-outputs'
@@ -41,7 +49,8 @@ export const LOGIC_STEPS = [
     hasIndicators: true
   },
   {
-    key: 'shortOutcomes',
+    key: 'outcomesShort',
+    kind: 'lane',
     color: {
       border: 'border-logic-short',
       background: 'bg-logic-short'
@@ -50,7 +59,8 @@ export const LOGIC_STEPS = [
     hasIndicators: true
   },
   {
-    key: 'longOutcomes',
+    key: 'outcomesLong',
+    kind: 'lane',
     color: {
       border: 'border-logic-long',
       background: 'bg-logic-long'
@@ -60,6 +70,7 @@ export const LOGIC_STEPS = [
   },
   {
     key: 'impact',
+    kind: 'lane',
     color: {
       border: 'border-logic-impact',
       background: 'bg-logic-impact'
@@ -68,6 +79,8 @@ export const LOGIC_STEPS = [
     hasIndicators: true
   }
 ];
+
+export const ALL_STEP_DEFINITIONS = [...CONTEXT_STEPS, ...PIPELINE_STEPS];
 
 export const INITIAL_TEMPLATE = {
   id: 'blank',
@@ -87,22 +100,36 @@ export const BASIC_TEMPLATE = {
     en: 'Pre-populated with the standard logic model components.',
     sv: 'Förifylld med standardkomponenterna i en logikmodell.'
   },
-  nodes: LOGIC_STEPS.map((step, index) => ({
-    id: step.key,
-    type: 'logicNode',
-    position: { x: index * 280, y: 0 },
-    data: {
-      stepKey: step.key,
-      title: step.defaultTitle,
-      description: { en: '', sv: '' },
-      indicators: [],
-      assumptions: []
-    }
-  })),
-  edges: LOGIC_STEPS.slice(0, -1).map((step, index) => ({
-    id: `${step.key}-${LOGIC_STEPS[index + 1].key}`,
+  nodes: [
+    ...CONTEXT_STEPS.map((step, index) => ({
+      id: step.key,
+      type: 'logicNode',
+      position: { x: index * 320, y: -180 },
+      data: {
+        stepKey: step.key,
+        title: step.defaultTitle,
+        description: { en: '', sv: '' },
+        indicators: [],
+        assumptions: []
+      }
+    })),
+    ...PIPELINE_STEPS.map((step, index) => ({
+      id: step.key,
+      type: 'logicNode',
+      position: { x: index * 280, y: 40 },
+      data: {
+        stepKey: step.key,
+        title: step.defaultTitle,
+        description: { en: '', sv: '' },
+        indicators: [],
+        assumptions: []
+      }
+    }))
+  ],
+  edges: PIPELINE_STEPS.slice(0, -1).map((step, index) => ({
+    id: `${step.key}-${PIPELINE_STEPS[index + 1].key}`,
     source: step.key,
-    target: LOGIC_STEPS[index + 1].key,
+    target: PIPELINE_STEPS[index + 1].key,
     data: {
       assumptions: { en: '', sv: '' }
     }
@@ -120,7 +147,7 @@ export const EXAMPLE_TEMPLATE = {
     {
       id: 'problem',
       type: 'logicNode',
-      position: { x: 0, y: 0 },
+      position: { x: 40, y: -180 },
       data: {
         stepKey: 'problem',
         title: {
@@ -138,7 +165,7 @@ export const EXAMPLE_TEMPLATE = {
     {
       id: 'target',
       type: 'logicNode',
-      position: { x: 260, y: 0 },
+      position: { x: 360, y: -180 },
       data: {
         stepKey: 'target',
         title: {
@@ -156,7 +183,7 @@ export const EXAMPLE_TEMPLATE = {
     {
       id: 'inputs',
       type: 'logicNode',
-      position: { x: 520, y: 0 },
+      position: { x: 0, y: 40 },
       data: {
         stepKey: 'inputs',
         title: {
@@ -216,11 +243,11 @@ export const EXAMPLE_TEMPLATE = {
       }
     },
     {
-      id: 'shortOutcomes',
+      id: 'outcomesShort',
       type: 'logicNode',
-      position: { x: 1300, y: 0 },
+      position: { x: 1040, y: 40 },
       data: {
-        stepKey: 'shortOutcomes',
+        stepKey: 'outcomesShort',
         title: {
           en: 'Improved coping skills',
           sv: 'Förbättrade coping-färdigheter'
@@ -250,11 +277,11 @@ export const EXAMPLE_TEMPLATE = {
       }
     },
     {
-      id: 'longOutcomes',
+      id: 'outcomesLong',
       type: 'logicNode',
-      position: { x: 1560, y: 0 },
+      position: { x: 1300, y: 40 },
       data: {
-        stepKey: 'longOutcomes',
+        stepKey: 'outcomesLong',
         title: {
           en: 'Sustained wellbeing',
           sv: 'Bestående välmående'
@@ -295,13 +322,11 @@ export const EXAMPLE_TEMPLATE = {
     }
   ],
   edges: [
-    'problem-target',
-    'target-inputs',
     'inputs-activities',
     'activities-outputs',
-    'outputs-shortOutcomes',
-    'shortOutcomes-longOutcomes',
-    'longOutcomes-impact'
+    'outputs-outcomesShort',
+    'outcomesShort-outcomesLong',
+    'outcomesLong-impact'
   ].map((pair) => {
     const [source, target] = pair.split('-');
     return {
