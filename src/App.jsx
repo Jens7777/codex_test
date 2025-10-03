@@ -13,7 +13,7 @@ import LogicNode from './nodes/LogicNode.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import {
   BASIC_TEMPLATE,
-  LOGIC_STEPS,
+  PIPELINE_STEPS,
   TEMPLATE_LOOKUP,
   TEMPLATES
 } from './utils/templates.js';
@@ -145,15 +145,18 @@ export default function App() {
 
   const handleAddNode = useCallback(
     (stepKey) => {
-      const step = LOGIC_STEPS.find((item) => item.key === stepKey);
+      const step = PIPELINE_STEPS.find((item) => item.key === stepKey);
       if (!step) return;
       const baseTitle = step.defaultTitle ?? { en: stepKey, sv: stepKey };
       const newNodeId = `${stepKey}-${randomId().slice(0, 6)}`;
-      const offsetX = nodes.length * 220;
+      const laneIndex = PIPELINE_STEPS.findIndex((item) => item.key === stepKey);
+      const siblingsInLane = nodes.filter((node) => node.data?.stepKey === stepKey).length;
+      const offsetX = laneIndex >= 0 ? laneIndex * 280 : nodes.length * 220;
+      const offsetY = laneIndex >= 0 ? 40 + siblingsInLane * 160 : 40 + nodes.length * 120;
       const newNode = {
         id: newNodeId,
         type: 'logicNode',
-        position: { x: offsetX, y: 100 },
+        position: { x: offsetX, y: offsetY },
         data: {
           language,
           stepKey,
@@ -174,11 +177,22 @@ export default function App() {
         }
       });
     },
-    [language, nodes.length, setNodes]
+    [language, nodes, setNodes]
   );
 
   const onConnect = useCallback(
     (connection) => {
+      if (!connection?.source || !connection?.target) {
+        return;
+      }
+      const isContextNodeId = (nodeId) => {
+        const node = nodes.find((item) => item.id === nodeId);
+        const stepKey = node?.data?.stepKey;
+        return stepKey === 'problem' || stepKey === 'target';
+      };
+      if (isContextNodeId(connection.source) || isContextNodeId(connection.target)) {
+        return;
+      }
       setEdges((current) =>
         addEdge(
           {
@@ -191,7 +205,7 @@ export default function App() {
         )
       );
     },
-    [setEdges]
+    [nodes, setEdges]
   );
 
   const onSelectionChange = useCallback(({ nodes: selectedNodes, edges: selectedEdges }) => {
@@ -455,7 +469,7 @@ export default function App() {
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {LOGIC_STEPS.map((step) => (
+            {PIPELINE_STEPS.map((step) => (
               <button
                 key={step.key}
                 type="button"
