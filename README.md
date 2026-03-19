@@ -1,57 +1,79 @@
-# Logic Model Builder
+# Forandringsteori Studio
 
-This project is a React + Vite application that helps teams design and document a logic model (theory of change / effektlogik) for their project. It offers drag-and-drop editing through React Flow, bilingual labels (English/Swedish), template starters, and export to JSON, PNG, or PDF.
+Ett ombyggt verktyg for att skapa en klassisk forandringsteori utifran uppladdad kontext. Frontend ar byggd som en statisk React/Vite-app for GitHub Pages, medan AI-anropen gar via en separat proxy for att skydda API-nyckeln.
 
-## Getting started
+## Vad appen gor
+
+- tar emot inklistrad text, `docx`, `pdf` och bilder
+- extraherar text ur Word-filer direkt i browsern
+- skickar underlaget till en proxy som anropar Gemini
+- genererar ett strukturerat utkast for forandringsteori
+- later anvandaren redigera varje sektion manuellt
+- visar en automatisk oversiktsvy over logikkedjan
+- autosparar utkast och kallmetadata i `localStorage`
+- exporterar utkast som JSON och har utskriftsvanlig vy for PDF
+
+## Frontend lokalt
 
 ```bash
 npm install
 npm run dev
 ```
 
-> **Note:** If installing dependencies from npm fails due to a restricted mirror, configure npm to use the public registry, for example:
->
-> ```bash
-> npm set registry https://registry.npmjs.org/
-> ```
+Appen letar efter proxy-URL i denna ordning:
 
-Once the development server is running, open the printed local URL in your browser.
+1. `window.__APP_CONFIG__.apiBaseUrl` via `public/app-config.js`
+2. `VITE_API_BASE_URL`
+3. samma origin `/api`
 
-## Available scripts
+## Tester
 
-- `npm run dev` – start the Vite development server
-- `npm run build` – build the production bundle
-- `npm run preview` – preview the production bundle locally
-
-## Key features
-
-- Predefined templates and example logic model to get started quickly
-- Drag-and-drop authoring with React Flow, including custom-styled nodes for the core logic model steps
-- Sidebar editor for descriptions, indicators, data sources, and assumptions (per node and per connection)
-- Language toggle between English and Swedish labels/content
-- Export current model structure to JSON, and capture the diagram as PNG or PDF via `html-to-image` + `jsPDF`
-
-## Project structure
-
-```
-├── index.html
-├── package.json
-├── postcss.config.js
-├── public/
-├── src/
-│   ├── App.jsx
-│   ├── components/
-│   │   └── Sidebar.jsx
-│   ├── index.css
-│   ├── main.jsx
-│   ├── nodes/
-│   │   └── LogicNode.jsx
-│   └── utils/
-│       ├── exporters.js
-│       └── templates.js
-└── tailwind.config.js
+```bash
+npm run test
 ```
 
-## Deployment
+## GitHub Pages
 
-The app is built with Vite and does not rely on a backend, so it can be deployed on static hosts such as Netlify or Vercel. Build the project with `npm run build` and deploy the generated `dist/` directory.
+Workflow finns i [`.github/workflows/deploy-pages.yml`](/C:/Users/jensma/repos/codex_test/.github/workflows/deploy-pages.yml).
+
+For att frontend ska prata med rätt proxy i GitHub Actions, satt repository-variabeln:
+
+- `VITE_API_BASE_URL`
+
+Workflow bygger med:
+
+- `VITE_BASE_PATH=/<repo>/`
+- `VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}`
+
+## Proxy
+
+Proxykod finns i [`proxy/worker.mjs`](/C:/Users/jensma/repos/codex_test/proxy/worker.mjs).
+
+Se [`proxy/README.md`](/C:/Users/jensma/repos/codex_test/proxy/README.md) och [`proxy/wrangler.toml.example`](/C:/Users/jensma/repos/codex_test/proxy/wrangler.toml.example) for exempel pa deployment med Cloudflare Worker.
+
+Nodvandiga proxy-hemligheter:
+
+- `GEMINI_API_KEY`
+- `ACCESS_CODE`
+
+Viktiga proxy-variabler:
+
+- `ALLOWED_ORIGIN`
+- `GEMINI_MODEL`
+- `RATE_LIMIT_MAX_REQUESTS`
+- `RATE_LIMIT_WINDOW_MS`
+- `MAX_FILE_SIZE_BYTES`
+- `MAX_TOTAL_SIZE_BYTES`
+
+## Viktiga mappar
+
+```text
+src/
+  App.jsx
+  components/
+  nodes/
+  utils/
+proxy/
+.github/workflows/
+public/
+```

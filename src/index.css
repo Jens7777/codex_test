@@ -1,16 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
+  --page-bg: #f3ece3;
+  --paper: #fbf7f2;
+  --paper-strong: #fffdf9;
+  --ink-strong: #1e2330;
+  --ink-soft: #4c5565;
+  --ink-muted: #8891a1;
+  --accent-teal: #1f7a8c;
+  --accent-coral: #dd6e42;
+  --line-soft: rgba(30, 35, 48, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-width: 320px;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  color: var(--ink-strong);
+  background:
+    radial-gradient(circle at top left, rgba(31, 122, 140, 0.16), transparent 34%),
+    radial-gradient(circle at top right, rgba(221, 110, 66, 0.18), transparent 28%),
+    linear-gradient(180deg, #f6efe6 0%, #f2eadf 36%, #efe4d9 100%);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.page-shell {
+  margin: 0 auto;
+  max-width: 1600px;
+  padding: 32px 20px 56px;
+}
+
+.font-display {
+  font-family: 'Fraunces', Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.field-input,
+.field-textarea {
+  width: 100%;
+  border: 1px solid rgba(30, 35, 48, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink-strong);
+  padding: 14px 16px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: var(--ink-muted);
+}
+
+.field-input:focus,
+.field-textarea:focus {
+  outline: none;
+  border-color: rgba(31, 122, 140, 0.46);
+  box-shadow: 0 0 0 6px rgba(31, 122, 140, 0.1);
+  transform: translateY(-1px);
+}
+
+.field-textarea {
+  resize: vertical;
 }
 
 .react-flow__node {
-  border-radius: 0.75rem;
+  border-radius: 24px;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .page-shell {
+    padding: 18px 14px 40px;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .page-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .field-input,
+  .field-textarea {
+    border-color: rgba(30, 35, 48, 0.12);
+    box-shadow: none;
+    background: white;
+  }
 }
