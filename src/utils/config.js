@@ -4,14 +4,14 @@ export const getAppConfig = () => {
   if (typeof window === 'undefined') {
     return {
       apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
-      appName: 'Forandringsteori Studio'
+      appName: 'Förändringsteori Studio'
     };
   }
 
   return {
     apiBaseUrl:
       window.__APP_CONFIG__?.apiBaseUrl?.trim() || import.meta.env.VITE_API_BASE_URL?.trim() || '',
-    appName: window.__APP_CONFIG__?.appName || 'Forandringsteori Studio'
+    appName: window.__APP_CONFIG__?.appName || 'Förändringsteori Studio'
   };
 };
 

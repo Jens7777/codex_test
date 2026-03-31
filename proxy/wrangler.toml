@@ -4,7 +4,7 @@ compatibility_date = "2026-03-18"
 
 [vars]
 ALLOWED_ORIGIN = "https://Jens7777.github.io"
-GEMINI_MODEL = "gemini-2.5-flash"
+GEMINI_MODEL = "gemini-2.5-pro"
 RATE_LIMIT_MAX_REQUESTS = "5"
 RATE_LIMIT_WINDOW_MS = "60000"
 MAX_FILE_SIZE_BYTES = "8388608"

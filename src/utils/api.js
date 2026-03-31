@@ -37,10 +37,17 @@ export const generateTheoryDraft = async ({
     formData.append('imageFiles', file, file.name);
   });
 
-  const response = await fetch(resolveApiUrl('/api/generate-theory'), {
-    method: 'POST',
-    body: formData
-  });
+  let response;
+  try {
+    response = await fetch(resolveApiUrl('/api/generate-theory'), {
+      method: 'POST',
+      body: formData
+    });
+  } catch (networkError) {
+    throw new Error(
+      'Kunde inte nå proxyn. Kontrollera att API-adressen är korrekt konfigurerad och att Cloudflare-workern är aktiv.'
+    );
+  }
 
   if (!response.ok) {
     throw new Error(await getErrorMessage(response));

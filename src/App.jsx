@@ -42,7 +42,7 @@ const detectSourceKind = (file) => {
 
 const formatSavedAt = (savedAt) => {
   if (!savedAt) {
-    return 'Vantar pa andringar';
+    return 'Väntar på ändringar';
   }
 
   try {
@@ -112,8 +112,8 @@ export default function App() {
       setLastSavedAt(storedDraft.savedAt ?? null);
       setUiMessage(
         (storedDraft.sources ?? []).some((source) => source.needsReupload)
-          ? 'Tidigare PDF- och bildfiler maste laddas upp pa nytt innan du kan generera igen.'
-          : 'Tidigare utkast aterstallt fran lokal autosave.'
+          ? 'Tidigare PDF- och bildfiler måste laddas upp på nytt innan du kan generera igen.'
+          : 'Tidigare utkast återställt från lokal autosave.'
       );
     }
 
@@ -161,7 +161,7 @@ export default function App() {
       const kind = detectSourceKind(file);
 
       if (!kind) {
-        setUiMessage(`Filtypen for ${file.name} stodjs inte i denna version.`);
+        setUiMessage(`Filtypen för ${file.name} stöds inte i denna version.`);
         continue;
       }
 
@@ -212,7 +212,7 @@ export default function App() {
                 : source
             )
           );
-          setUiMessage(`Det gick inte att lasa ${file.name}.`);
+          setUiMessage(`Det gick inte att läsa ${file.name}.`);
         }
 
         continue;
@@ -245,7 +245,7 @@ export default function App() {
   };
 
   const handleResetDraft = () => {
-    if (typeof window !== 'undefined' && !window.confirm('Ta bort lokalt utkast och borja om?')) {
+    if (typeof window !== 'undefined' && !window.confirm('Ta bort lokalt utkast och börja om?')) {
       return;
     }
 
@@ -277,22 +277,22 @@ export default function App() {
     const hasProcessingDocx = sources.some((source) => source.kind === 'docx' && source.status === 'processing');
 
     if (hasProcessingDocx) {
-      setGenerationError('Vanta tills alla Word-filer har bearbetats klart.');
+      setGenerationError('Vänta tills alla Word-filer har bearbetats klart.');
       return;
     }
 
     if (hasBlockingUploads) {
-      setGenerationError('Ladda upp PDF- eller bildfilerna igen innan du genererar pa nytt.');
+      setGenerationError('Ladda upp PDF- eller bildfilerna igen innan du genererar på nytt.');
       return;
     }
 
     if (!pastedText.trim() && docxTexts.length === 0 && pdfFiles.length === 0 && imageFiles.length === 0) {
-      setGenerationError('Lagg till minst ett underlag innan du genererar.');
+      setGenerationError('Lägg till minst ett underlag innan du genererar.');
       return;
     }
 
     if (!accessCode.trim()) {
-      setGenerationError('Skriv in en atkomstkod som proxyn kan validera.');
+      setGenerationError('Skriv in en åtkomstkod som proxyn kan validera.');
       return;
     }
 
@@ -318,7 +318,7 @@ export default function App() {
       setSourceSummary(result.sourceSummary);
       setWarnings(result.warnings);
       setActiveView('editor');
-      setUiMessage('Utkastet ar uppdaterat och redo for fortsatt redigering.');
+      setUiMessage('Utkastet är uppdaterat och redo för fortsatt redigering.');
     } catch (error) {
       setGenerationError(error.message || 'Genereringen misslyckades.');
     } finally {
@@ -335,64 +335,74 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] text-[var(--ink-strong)]">
+    <div className="min-h-screen text-[var(--ink-strong)]">
       <div className="page-shell">
-        <header className="print-hidden relative overflow-hidden rounded-[40px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(247,241,232,0.92))] px-6 py-8 shadow-[0_28px_90px_rgba(28,35,48,0.08)]">
-          <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_top_right,rgba(31,122,140,0.22),transparent_56%),radial-gradient(circle_at_bottom_right,rgba(221,110,66,0.2),transparent_48%)]" />
-          <div className="relative grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
+
+        {/* ── Header ─────────────────────────────────────────────── */}
+        <header className="print-hidden relative overflow-hidden rounded-[36px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(248,242,233,0.94))] px-7 py-9 shadow-[0_24px_80px_rgba(28,35,48,0.1)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(31,122,140,0.18),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(221,110,66,0.16),transparent_44%)]" />
+          <div className="relative grid gap-8 xl:grid-cols-[1.25fr_0.75fr]">
+            {/* Title + subtitle */}
             <div className="space-y-4">
-              <span className="inline-flex rounded-full border border-[rgba(31,122,140,0.18)] bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-[#1f7a8c]">
+              <span className="inline-flex rounded-full border border-[rgba(31,122,140,0.2)] bg-white/75 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.24em] text-[#1f7a8c]">
                 {appConfig.appName}
               </span>
               <div className="space-y-3">
-                <h1 className="font-display text-5xl leading-tight text-[var(--ink-strong)] md:text-6xl">
-                  Ladda upp underlag. Fa en forandringsteori. Redigera vidare.
+                <h1 className="font-display text-[2.8rem] leading-[1.1] text-[var(--ink-strong)] md:text-6xl">
+                  Ladda upp underlag.{' '}
+                  <span className="text-[#1f7a8c]">Få en förändringsteori.</span>{' '}
+                  Redigera vidare.
                 </h1>
-                <p className="max-w-3xl text-base leading-7 text-[var(--ink-soft)] md:text-lg">
-                  Verktyget ar nu byggt for att tolka projektmaterial, skapa ett AI-stott utkast
-                  och lata dig arbeta vidare i en modern redaktionell editor med visuell oversikt.
+                <p className="max-w-2xl text-base leading-7 text-[var(--ink-soft)]">
+                  Verktyget är byggt för att tolka projektmaterial, skapa ett AI-stöttat utkast
+                  och låta dig arbeta vidare i en redaktionell editor med visuell översikt.
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-3 self-end sm:grid-cols-2">
-              <div className="rounded-[28px] border border-white/60 bg-white/76 p-4 backdrop-blur">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                  Underlag
+            {/* Stats cards */}
+            <div className="grid grid-cols-2 gap-3 self-center">
+              {[
+                {
+                  label: 'Underlag',
+                  value: sources.length + (pastedText.trim() ? 1 : 0),
+                  sub: 'text, Word, PDF och bilder'
+                },
+                {
+                  label: 'Sektioner',
+                  value: 12,
+                  sub: 'klassisk förändringsteori'
+                },
+                {
+                  label: 'Utkast',
+                  value: hasDraft ? 'Redo' : 'Tomt',
+                  sub: autosaveLabel
+                },
+                {
+                  label: 'Hosting',
+                  value: 'GitHub',
+                  sub: 'statisk frontend + proxy'
+                }
+              ].map(({ label, value, sub }) => (
+                <div
+                  key={label}
+                  className="rounded-[22px] border border-white/60 bg-white/72 p-4 backdrop-blur"
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+                    {label}
+                  </div>
+                  <div className="mt-1.5 text-2xl font-bold text-[var(--ink-strong)]">{value}</div>
+                  <div className="mt-0.5 text-xs text-[var(--ink-soft)]">{sub}</div>
                 </div>
-                <div className="mt-2 text-3xl font-semibold text-[var(--ink-strong)]">
-                  {sources.length + (pastedText.trim() ? 1 : 0)}
-                </div>
-                <div className="mt-1 text-sm text-[var(--ink-soft)]">text, Word, PDF och bilder</div>
-              </div>
-              <div className="rounded-[28px] border border-white/60 bg-white/76 p-4 backdrop-blur">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                  Sektioner
-                </div>
-                <div className="mt-2 text-3xl font-semibold text-[var(--ink-strong)]">12</div>
-                <div className="mt-1 text-sm text-[var(--ink-soft)]">klassisk forandringsteori</div>
-              </div>
-              <div className="rounded-[28px] border border-white/60 bg-white/76 p-4 backdrop-blur">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                  GitHub Pages
-                </div>
-                <div className="mt-2 text-3xl font-semibold text-[var(--ink-strong)]">Ja</div>
-                <div className="mt-1 text-sm text-[var(--ink-soft)]">statisk frontend med separat proxy</div>
-              </div>
-              <div className="rounded-[28px] border border-white/60 bg-white/76 p-4 backdrop-blur">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                  Utkast
-                </div>
-                <div className="mt-2 text-3xl font-semibold text-[var(--ink-strong)]">
-                  {hasDraft ? 'Redo' : 'Tomt'}
-                </div>
-                <div className="mt-1 text-sm text-[var(--ink-soft)]">{autosaveLabel}</div>
-              </div>
+              ))}
             </div>
           </div>
         </header>
 
-        <main className="mt-8 grid gap-8 xl:grid-cols-[0.92fr_1.08fr]">
+        {/* ── Main grid ──────────────────────────────────────────── */}
+        <main className="mt-7 grid gap-7 xl:grid-cols-[0.9fr_1.1fr]">
+
+          {/* Left column: intake + material status */}
           <div className="print-hidden space-y-6">
             <IntakePanel
               projectTitle={projectTitle}
@@ -412,74 +422,66 @@ export default function App() {
               onCreateBlankDraft={handleCreateBlankDraft}
             />
 
-            <section className="rounded-[30px] border border-[rgba(28,35,48,0.08)] bg-white/90 p-6 shadow-[0_18px_44px_rgba(28,35,48,0.06)]">
-              <div className="flex items-center justify-between gap-3">
+            {/* Material status card */}
+            <section className="rounded-[24px] border border-[rgba(28,35,48,0.08)] bg-white/88 p-5 shadow-[0_14px_36px_rgba(28,35,48,0.06)]">
+              <div className="flex items-center justify-between gap-3 mb-4">
                 <div>
-                  <span className="inline-flex rounded-full bg-[rgba(221,110,66,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#b65d3b]">
+                  <span className="inline-flex rounded-full bg-[rgba(221,110,66,0.11)] px-3 py-0.5 text-xs font-bold uppercase tracking-[0.2em] text-[#b65d3b]">
                     Materialstatus
                   </span>
-                  <h2 className="mt-2 font-display text-3xl text-[var(--ink-strong)]">
+                  <h2 className="mt-1.5 font-display text-2xl text-[var(--ink-strong)]">
                     Vad som finns i underlaget
                   </h2>
                 </div>
               </div>
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[24px] bg-[var(--paper)] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                    Word
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: 'Word', value: sourceStats.docx },
+                  { label: 'PDF', value: sourceStats.pdf },
+                  { label: 'Bilder', value: sourceStats.image }
+                ].map(({ label, value }) => (
+                  <div key={label} className="rounded-[18px] bg-[var(--paper)] p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+                      {label}
+                    </div>
+                    <div className="mt-1.5 text-2xl font-bold text-[var(--ink-strong)]">{value}</div>
                   </div>
-                  <div className="mt-2 text-2xl font-semibold text-[var(--ink-strong)]">{sourceStats.docx}</div>
-                </div>
-                <div className="rounded-[24px] bg-[var(--paper)] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                    PDF
-                  </div>
-                  <div className="mt-2 text-2xl font-semibold text-[var(--ink-strong)]">{sourceStats.pdf}</div>
-                </div>
-                <div className="rounded-[24px] bg-[var(--paper)] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-                    Bilder
-                  </div>
-                  <div className="mt-2 text-2xl font-semibold text-[var(--ink-strong)]">{sourceStats.image}</div>
-                </div>
+                ))}
               </div>
             </section>
           </div>
 
+          {/* Right column: view switcher + editor/overview */}
           <div className="space-y-6">
-            <section className="print-hidden rounded-[30px] border border-[rgba(28,35,48,0.08)] bg-white/88 p-4 shadow-[0_18px_44px_rgba(28,35,48,0.06)]">
+            {/* View + export toolbar */}
+            <section className="print-hidden rounded-[24px] border border-[rgba(28,35,48,0.08)] bg-white/88 p-4 shadow-[0_14px_36px_rgba(28,35,48,0.06)]">
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setActiveView('editor')}
-                    className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      activeView === 'editor'
-                        ? 'bg-[var(--ink-strong)] text-white'
-                        : 'bg-[var(--paper)] text-[var(--ink-soft)] hover:text-[var(--ink-strong)]'
-                    }`}
-                  >
-                    Editor
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveView('overview')}
-                    disabled={!hasDraft}
-                    className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      activeView === 'overview'
-                        ? 'bg-[var(--ink-strong)] text-white'
-                        : 'bg-[var(--paper)] text-[var(--ink-soft)] hover:text-[var(--ink-strong)]'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                  >
-                    Oversikt
-                  </button>
+                <div className="flex gap-2">
+                  {[
+                    { id: 'editor', label: 'Editor' },
+                    { id: 'overview', label: 'Översikt', disabled: !hasDraft }
+                  ].map(({ id, label, disabled }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setActiveView(id)}
+                      disabled={disabled}
+                      className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold transition ${
+                        activeView === id
+                          ? 'bg-[var(--ink-strong)] text-white shadow-sm'
+                          : 'bg-[var(--paper)] text-[var(--ink-soft)] hover:text-[var(--ink-strong)]'
+                      } disabled:cursor-not-allowed disabled:opacity-45`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => exportDraftAsJson(exportPayload)}
                     disabled={!hasDraft}
-                    className="inline-flex rounded-full border border-[rgba(28,35,48,0.12)] px-4 py-2 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(28,35,48,0.24)] hover:bg-[var(--paper)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex rounded-full border border-[rgba(28,35,48,0.12)] px-4 py-2 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(28,35,48,0.24)] hover:bg-[var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     Exportera JSON
                   </button>
@@ -487,36 +489,38 @@ export default function App() {
                     type="button"
                     onClick={printDraft}
                     disabled={!hasDraft}
-                    className="inline-flex rounded-full border border-[rgba(28,35,48,0.12)] px-4 py-2 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(28,35,48,0.24)] hover:bg-[var(--paper)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex rounded-full border border-[rgba(28,35,48,0.12)] px-4 py-2 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(28,35,48,0.24)] hover:bg-[var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     Skriv ut / PDF
                   </button>
                   <button
                     type="button"
                     onClick={handleResetDraft}
-                    className="inline-flex rounded-full bg-[rgba(221,110,66,0.12)] px-4 py-2 text-sm font-semibold text-[#b65d3b] transition hover:bg-[rgba(221,110,66,0.18)]"
+                    className="inline-flex rounded-full bg-[rgba(221,110,66,0.1)] px-4 py-2 text-sm font-semibold text-[#b65d3b] transition hover:bg-[rgba(221,110,66,0.18)]"
                   >
-                    Borja om
+                    Börja om
                   </button>
                 </div>
               </div>
             </section>
 
+            {/* Empty state */}
             {!hasDraft && (
-              <section className="rounded-[32px] border border-[rgba(28,35,48,0.08)] bg-white/90 p-8 shadow-[0_18px_44px_rgba(28,35,48,0.06)]">
-                <span className="inline-flex rounded-full bg-[rgba(31,122,140,0.1)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1f7a8c]">
-                  Nast steg
+              <section className="rounded-[28px] border border-[rgba(28,35,48,0.08)] bg-white/90 p-8 shadow-[0_14px_36px_rgba(28,35,48,0.06)]">
+                <span className="inline-flex rounded-full bg-[rgba(31,122,140,0.1)] px-3 py-0.5 text-xs font-bold uppercase tracking-[0.22em] text-[#1f7a8c]">
+                  Nästa steg
                 </span>
-                <h2 className="mt-3 font-display text-4xl text-[var(--ink-strong)]">
+                <h2 className="mt-3 font-display text-4xl text-[var(--ink-strong)] leading-snug">
                   Generera eller starta ett tomt utkast
                 </h2>
                 <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--ink-soft)]">
-                  Nar du har lagt till material kan verktyget skapa en forsta struktur. Du kan
-                  ocksa starta ett tomt utkast om du vill redigera manuellt direkt.
+                  När du har lagt till material kan verktyget skapa en första struktur. Du kan
+                  också starta ett tomt utkast om du vill redigera manuellt direkt.
                 </p>
               </section>
             )}
 
+            {/* Theory editor */}
             {hasDraft && activeView === 'editor' && (
               <TheoryEditor
                 projectTitle={projectTitle}
@@ -534,11 +538,12 @@ export default function App() {
               />
             )}
 
+            {/* Overview canvas */}
             {hasDraft && activeView === 'overview' && (
               <Suspense
                 fallback={
-                  <section className="rounded-[32px] border border-[rgba(28,35,48,0.08)] bg-white/92 p-8 shadow-[0_18px_44px_rgba(28,35,48,0.06)]">
-                    <p className="text-sm text-[var(--ink-soft)]">Laddar oversiktsvyn...</p>
+                  <section className="rounded-[28px] border border-[rgba(28,35,48,0.08)] bg-white/90 p-8 shadow-[0_14px_36px_rgba(28,35,48,0.06)]">
+                    <p className="text-sm text-[var(--ink-soft)]">Laddar översiktsvyn…</p>
                   </section>
                 }
               >

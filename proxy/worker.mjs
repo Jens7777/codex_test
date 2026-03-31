@@ -1,6 +1,6 @@
 const rateLimitStore = new Map();
 
-const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-2.5-pro';
 const DEFAULT_MAX_FILE_SIZE = 8 * 1024 * 1024;
 const DEFAULT_MAX_TOTAL_SIZE = 20 * 1024 * 1024;
 
@@ -193,29 +193,29 @@ export const validateFiles = (files, allowedTypes, maxSize) => {
         type.endsWith('/*') ? mimeType.startsWith(type.slice(0, -1)) : mimeType === type
       )
     ) {
-      throw new Error(`Filtypen ${file.type || file.name} ar inte tillaten.`);
+      throw new Error(`Filtypen ${file.type || file.name} är inte tillåten.`);
     }
 
     if (file.size > maxSize) {
-      throw new Error(`${file.name} overskrider maximal filstorlek.`);
+      throw new Error(`${file.name} överskrider maximal filstorlek.`);
     }
   });
 };
 
 const getGeminiPrompt = ({ locale, projectTitle, pastedText, docxTexts, pdfCount, imageCount }) => `
-Du ar en erfaren analytiker som ska skapa en svensk forandringsteori i klassisk struktur.
+Du är en erfaren analytiker som ska skapa en svensk förändringsteori i klassisk struktur.
 
 Svara ENDAST med JSON enligt schemat.
-Sprak: ${locale === 'sv' ? 'svenska' : locale}
+Språk: ${locale === 'sv' ? 'svenska' : locale}
 Titel: ${projectTitle || 'Inte angivet'}
 
 Instruktioner:
 - Tolka allt underlag samlat.
-- Var konkret och skriv kortfattat men anvandbart.
-- Om underlaget ar oklart, fyll inte i med hallucinerade detaljer. Markera i stallet oklara delar under evidenceGaps eller confidenceNotes.
+- Var konkret och skriv kortfattat men användbart.
+- Om underlaget är oklart, fyll inte i med hallucinerade detaljer. Markera istället oklara delar under evidenceGaps eller confidenceNotes.
 - sourceSummary.summary ska ge en kort bild av vad underlaget handlar om.
-- sourceSummary.sourceHighlights ska lista 3-6 viktiga teman eller saker som underlaget verkar fokusera pa.
-- warnings ska endast innehalla verkliga osakerheter eller begransningar.
+- sourceSummary.sourceHighlights ska lista 3-6 viktiga teman eller saker som underlaget verkar fokusera på.
+- warnings ska endast innehålla verkliga osäkerheter eller begränsningar.
 
 Textunderlag:
 ${pastedText || '(Inget inklistrat textunderlag)'}
@@ -253,7 +253,17 @@ const buildGeminiParts = async ({ prompt, pdfFiles, imageFiles }) => {
 };
 
 const extractCandidateText = (payload) => {
-  const parts = payload?.candidates?.[0]?.content?.parts ?? [];
+  const candidate = payload?.candidates?.[0];
+  if (!candidate) {
+    return '';
+  }
+
+  const finishReason = candidate.finishReason;
+  if (finishReason && finishReason !== 'STOP' && finishReason !== 'MAX_TOKENS') {
+    throw new Error(`Gemini stoppade med anledning: ${finishReason}.`);
+  }
+
+  const parts = candidate?.content?.parts ?? [];
   return parts
     .map((part) => part.text)
     .filter(Boolean)
@@ -265,7 +275,7 @@ const callGemini = async (env, requestPayload) => {
   const apiKey = trim(env.GEMINI_API_KEY);
 
   if (!apiKey) {
-    throw new Error('GEMINI_API_KEY saknas i proxyns miljo.');
+    throw new Error('GEMINI_API_KEY saknas i proxyns miljö.');
   }
 
   const response = await fetch(
@@ -291,7 +301,11 @@ const callGemini = async (env, requestPayload) => {
     throw new Error('Gemini returnerade inget tolkbart svar.');
   }
 
-  return JSON.parse(candidateText);
+  try {
+    return JSON.parse(candidateText);
+  } catch {
+    throw new Error('Gemini returnerade ogiltigt JSON-svar.');
+  }
 };
 
 const parseFormValue = (formData, key) => trim(formData.get(key));
@@ -310,19 +324,19 @@ export const handleGenerateTheory = async (request, env) => {
   const imageFiles = formData.getAll('imageFiles');
 
   if (!accessCode) {
-    return jsonResponse(request, env, { error: 'Atkomstkod saknas.' }, 400);
+    return jsonResponse(request, env, { error: 'Åtkomstkod saknas.' }, 400);
   }
 
   if (trim(env.ACCESS_CODE) !== accessCode) {
-    return jsonResponse(request, env, { error: 'Fel atkomstkod.' }, 401);
+    return jsonResponse(request, env, { error: 'Fel åtkomstkod.' }, 401);
   }
 
   if (!checkRateLimit(request, env, accessCode)) {
-    return jsonResponse(request, env, { error: 'For manga anrop. Prova snart igen.' }, 429);
+    return jsonResponse(request, env, { error: 'För många anrop. Prova igen snart.' }, 429);
   }
 
   if (!pastedText && docxTexts.length === 0 && pdfFiles.length === 0 && imageFiles.length === 0) {
-    return jsonResponse(request, env, { error: 'Minst ett underlag maste skickas med.' }, 400);
+    return jsonResponse(request, env, { error: 'Minst ett underlag måste skickas med.' }, 400);
   }
 
   const maxFileSize = Number.parseInt(env.MAX_FILE_SIZE_BYTES || `${DEFAULT_MAX_FILE_SIZE}`, 10);
@@ -330,7 +344,7 @@ export const handleGenerateTheory = async (request, env) => {
   const totalBinaryBytes = [...pdfFiles, ...imageFiles].reduce((sum, file) => sum + (file?.size || 0), 0);
 
   if (totalBinaryBytes > maxTotalSize) {
-    return jsonResponse(request, env, { error: 'Den totala filstorleken ar for stor.' }, 413);
+    return jsonResponse(request, env, { error: 'Den totala filstorleken är för stor.' }, 413);
   }
 
   try {
@@ -377,7 +391,7 @@ export const handleGenerateTheory = async (request, env) => {
 
     return jsonResponse(request, env, normalized, 200);
   } catch (error) {
-    return jsonResponse(request, env, { error: error.message || 'Okant proxyfel.' }, 502);
+    return jsonResponse(request, env, { error: error.message || 'Okänt proxyfel.' }, 502);
   }
 };
 
@@ -396,7 +410,7 @@ export default {
     }
 
     if (request.method !== 'POST') {
-      return jsonResponse(request, env, { error: 'Metoden stodjs inte.' }, 405);
+      return jsonResponse(request, env, { error: 'Metoden stöds inte.' }, 405);
     }
 
     return handleGenerateTheory(request, env);

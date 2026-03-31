@@ -17,74 +17,74 @@ export const THEORY_SECTION_META = {
     helper: 'Beskriv vilket behov eller vilken utmaning insatsen adresserar.',
     type: 'text',
     placeholder:
-      'Exempel: Unga i omradet rapporterar okad stress, ensamhet och svag tillit till lokala stodresurser.'
+      'Exempel: Unga i området rapporterar ökad stress, ensamhet och svag tillit till lokala stödresurser.'
   },
   targetGroups: {
-    title: 'Malgrupper',
-    helper: 'Lista vilka grupper som direkt eller indirekt berors av insatsen.',
+    title: 'Målgrupper',
+    helper: 'Lista vilka grupper som direkt eller indirekt berörs av insatsen.',
     type: 'list',
-    placeholder: 'Exempel: Unga 13-18 ar i kommunens skolor'
+    placeholder: 'Exempel: Unga 13–18 år i kommunens skolor'
   },
   inputs: {
-    title: 'Resurser och forutsattningar',
-    helper: 'Vilka resurser, partnerskap och kapaciteter behovs?',
+    title: 'Resurser och förutsättningar',
+    helper: 'Vilka resurser, partnerskap och kapaciteter behövs?',
     type: 'list',
-    placeholder: 'Exempel: Projektledare, metodstod och finansiering'
+    placeholder: 'Exempel: Projektledare, metodstöd och finansiering'
   },
   activities: {
     title: 'Aktiviteter och insatser',
-    helper: 'Vad ska faktiskt genomforas i projektet?',
+    helper: 'Vad ska faktiskt genomföras i projektet?',
     type: 'list',
-    placeholder: 'Exempel: Grupptraffar, utbildningar eller coachning'
+    placeholder: 'Exempel: Grupptträffar, utbildningar eller coachning'
   },
   outputs: {
     title: 'Direkta resultat',
-    helper: 'Vad levereras eller produceras pa kort sikt?',
+    helper: 'Vad levereras eller produceras på kort sikt?',
     type: 'list',
-    placeholder: 'Exempel: Antal genomforda workshops eller deltagare'
+    placeholder: 'Exempel: Antal genomförda workshops eller deltagare'
   },
   shortTermOutcomes: {
     title: 'Kortsiktiga effekter',
-    helper: 'Vilka tidiga forandringar vill ni se hos malgruppen?',
+    helper: 'Vilka tidiga förändringar vill ni se hos målgruppen?',
     type: 'list',
-    placeholder: 'Exempel: Forbattrad kunskap eller okad motivation'
+    placeholder: 'Exempel: Förbättrad kunskap eller ökad motivation'
   },
   longTermOutcomes: {
-    title: 'Langsiktiga effekter',
-    helper: 'Vilka mer varaktiga forandringar forvantas over tid?',
+    title: 'Långsiktiga effekter',
+    helper: 'Vilka mer varaktiga förändringar förväntas över tid?',
     type: 'list',
-    placeholder: 'Exempel: Starkare etablering, hallbara beteendeforandringar'
+    placeholder: 'Exempel: Starkare etablering, hållbara beteendeförändringar'
   },
   impact: {
-    title: 'Overgripande effekt',
-    helper: 'Sammanfatta den langsiktiga samhalls- eller verksamhetsnyttan.',
+    title: 'Övergripande effekt',
+    helper: 'Sammanfatta den långsiktiga samhälls- eller verksamhetsnyttan.',
     type: 'text',
     placeholder:
-      'Exempel: Fler unga har hallbara strategier for att hantera stress och fullfoljer skolan.'
+      'Exempel: Fler unga har hållbara strategier för att hantera stress och fullföljer skolan.'
   },
   assumptions: {
     title: 'Antaganden',
-    helper: 'Vilka antaganden maste halla for att logiken ska fungera?',
+    helper: 'Vilka antaganden måste hålla för att logiken ska fungera?',
     type: 'list',
-    placeholder: 'Exempel: Deltagarna fullfoljer insatsen over tid'
+    placeholder: 'Exempel: Deltagarna fullföljer insatsen över tid'
   },
   indicators: {
     title: 'Indikatorer',
     helper: 'Vilka indikatorer visar om arbetet ger resultat?',
     type: 'list',
-    placeholder: 'Exempel: Narvaro, sjalvskattning eller registerdata'
+    placeholder: 'Exempel: Närvaro, självskattning eller registerdata'
   },
   evidenceGaps: {
     title: 'Oklara delar att verifiera',
-    helper: 'Markera delar som behovs utforskas vidare innan ni laser modellen.',
+    helper: 'Markera delar som behöver utforskas vidare innan ni låser modellen.',
     type: 'list',
-    placeholder: 'Exempel: Saknas nulagesdata om malgruppens behov'
+    placeholder: 'Exempel: Saknas nulägésdata om målgruppens behov'
   },
   confidenceNotes: {
-    title: 'Tillforlitlighet och noter',
-    helper: 'Fanga osakerheter, risker eller kvalitetsnoteringar.',
+    title: 'Tillförlitlighet och noter',
+    helper: 'Fånga osäkerheter, risker eller kvalitetsnoteringar.',
     type: 'list',
-    placeholder: 'Exempel: Bedomningen bygger pa ett begransat underlag'
+    placeholder: 'Exempel: Bedömningen bygger på ett begränsat underlag'
   }
 };
 
