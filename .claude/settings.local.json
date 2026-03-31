@@ -4,7 +4,12 @@
       "Bash(grep -r \"stodjs\\\\|maste\\\\|gick\\\\|osakerheter\\\\|ar \" /c/Users/jensma/repos/codex_test/src/ --include=*.jsx --include=*.js)",
       "Bash(grep -r \"forandring\\\\|omrade\\\\|malgrupp\\\\|tillforlitlighet\\\\|antaganden\" /c/Users/jensma/repos/codex_test/src/ --include=*.jsx --include=*.js)",
       "Bash(grep -r \"forandring\\\\|omrade\\\\|malgrupp\\\\|tillforlitlighet\\\\|antaganden\\\\|stodjs\\\\|maste\\\\|ar \" /c/Users/jensma/repos/codex_test/proxy/ --include=*.mjs --include=*.js)",
-      "Bash(find /c/Users/jensma/repos/codex_test -maxdepth 2 -type d ! -path */node_modules* ! -path */.git* ! -path */dist*)"
+      "Bash(find /c/Users/jensma/repos/codex_test -maxdepth 2 -type d ! -path */node_modules* ! -path */.git* ! -path */dist*)",
+      "Bash(grep -E \"\\\\.\\(jsx?|tsx?|css\\)$\")",
+      "Bash(xargs grep:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx vite:*)"
     ]
   }
 }

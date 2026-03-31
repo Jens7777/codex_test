@@ -1,26 +1,26 @@
 const STAGE_META = [
-  { id: 'problem', label: 'Problem', x: 0, y: 40, accent: '#d97757' },
-  { id: 'targetGroups', label: 'Malgrupper', x: 320, y: 40, accent: '#db8d62' },
-  { id: 'inputs', label: 'Resurser', x: 640, y: 40, accent: '#1f7a8c' },
-  { id: 'activities', label: 'Aktiviteter', x: 960, y: 40, accent: '#217b74' },
-  { id: 'outputs', label: 'Outputs', x: 1280, y: 40, accent: '#2f6fb0' },
+  { id: 'problem', label: 'Problem', x: 0, y: 80, accent: '#e83c63' },
+  { id: 'targetGroups', label: 'Malgrupper', x: 360, y: 80, accent: '#482d55' },
+  { id: 'inputs', label: 'Resurser', x: 720, y: 80, accent: '#009ca6' },
+  { id: 'activities', label: 'Aktiviteter', x: 1080, y: 80, accent: '#0e4e65' },
+  { id: 'outputs', label: 'Outputs', x: 1440, y: 80, accent: '#009ca6' },
   {
     id: 'shortTermOutcomes',
     label: 'Kortsiktiga effekter',
-    x: 1600,
+    x: 1820,
     y: 0,
-    accent: '#5270a6'
+    accent: '#482d55'
   },
   {
     id: 'longTermOutcomes',
     label: 'Langsiktiga effekter',
-    x: 1600,
-    y: 200,
-    accent: '#6a5f9c'
+    x: 1820,
+    y: 340,
+    accent: '#0e4e65'
   },
-  { id: 'impact', label: 'Impact', x: 1920, y: 100, accent: '#a0566d' },
-  { id: 'assumptions', label: 'Antaganden', x: 960, y: 320, accent: '#87624b' },
-  { id: 'indicators', label: 'Indikatorer', x: 1280, y: 320, accent: '#3b6d6c' }
+  { id: 'impact', label: 'Impact', x: 2200, y: 140, accent: '#e83c63' },
+  { id: 'assumptions', label: 'Antaganden', x: 1080, y: 460, accent: '#828282' },
+  { id: 'indicators', label: 'Indikatorer', x: 1440, y: 460, accent: '#009ca6' }
 ];
 
 const createNodeItems = (value) => {
@@ -67,7 +67,7 @@ export const buildOverviewEdges = () => [
   target,
   animated: target === 'impact',
   style: {
-    stroke: '#c4b8aa',
+    stroke: '#c8c8c8',
     strokeWidth: 1.5
   }
 }));

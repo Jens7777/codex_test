@@ -8,7 +8,7 @@ const kindLabels = {
 
 const statusLabels = {
   ready: 'Redo',
-  processing: 'Bearbetas…',
+  processing: 'Bearbetas...',
   error: 'Fel',
   'needs-reupload': 'Ladda upp igen'
 };
@@ -41,18 +41,21 @@ export default function IntakePanel({
   onCreateBlankDraft
 }) {
   return (
-    <section className="rounded-[28px] border border-white/70 bg-white/88 shadow-[0_20px_60px_rgba(28,35,48,0.09)] backdrop-blur overflow-hidden">
+    <section className="rounded-xl border border-[var(--line-soft)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
       {/* Header */}
-      <div className="px-6 pt-6 pb-5 border-b border-[rgba(28,35,48,0.07)]">
-        <span className="inline-flex rounded-full bg-[rgba(31,122,140,0.1)] px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-[#1f7a8c]">
-          AI-intag
-        </span>
-        <h2 className="mt-2.5 font-display text-3xl text-[var(--ink-strong)] leading-snug">
-          Samla underlag och generera ett första utkast
+      <div className="px-6 pt-6 pb-5 border-b border-[var(--line-soft)]">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-5 w-1 rounded-full bg-[#009ca6]" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#009ca6]">
+            AI-intag
+          </span>
+        </div>
+        <h2 className="font-display text-2xl font-bold text-[var(--ink-strong)]">
+          Samla underlag och generera
         </h2>
-        <p className="mt-1.5 text-sm leading-6 text-[var(--ink-soft)]">
-          Klistra in text, ladda upp Word, PDF eller bilder och låt verktyget formulera en
-          klassisk förändringsteori som du sedan kan redigera vidare.
+        <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">
+          Klistra in text, ladda upp Word, PDF eller bilder och lat verktyget formulera en
+          forandringsteori som du sedan kan redigera vidare.
         </p>
       </div>
 
@@ -64,19 +67,19 @@ export default function IntakePanel({
             type="text"
             value={projectTitle}
             onChange={(event) => onProjectTitleChange(event.target.value)}
-            placeholder="Exempel: Lokal satsning för ungas psykiska hälsa"
+            placeholder="Exempel: Lokal satsning for ungas psykiska halsa"
             className="field-input"
           />
         </label>
 
         {/* File upload area */}
-        <div className="rounded-[20px] border border-[rgba(31,122,140,0.2)] bg-[rgba(31,122,140,0.035)] p-4 space-y-3">
+        <div className="rounded-xl border border-dashed border-[rgba(0,156,166,0.3)] bg-[rgba(0,156,166,0.02)] p-4 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[var(--ink-strong)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2d3547] active:scale-[0.97]">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#009ca6] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#00b0bb] active:scale-[0.97]">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M7 1v8M3.5 4.5 7 1l3.5 3.5M1.5 10.5v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              Lägg till filer
+              Lagg till filer
               <input
                 type="file"
                 multiple
@@ -89,7 +92,7 @@ export default function IntakePanel({
               />
             </label>
             <p className="text-sm text-[var(--ink-soft)]">
-              Stöd för{' '}
+              Stod for{' '}
               <span className="font-semibold text-[var(--ink-strong)]">docx</span>,{' '}
               <span className="font-semibold text-[var(--ink-strong)]">pdf</span> och{' '}
               <span className="font-semibold text-[var(--ink-strong)]">bilder</span>.
@@ -98,19 +101,19 @@ export default function IntakePanel({
 
           <div className="space-y-2">
             {sources.length === 0 && (
-              <div className="rounded-[16px] border border-dashed border-[rgba(31,122,140,0.25)] bg-white/60 px-4 py-3 text-sm text-[var(--ink-muted)]">
-                Inga filer valda än. Du kan fortfarande generera från inklistrad text, eller skapa
+              <div className="rounded-lg border border-dashed border-[rgba(0,156,166,0.2)] bg-white/60 px-4 py-3 text-sm text-[var(--ink-muted)]">
+                Inga filer valda an. Du kan fortfarande generera fran inklistrad text, eller skapa
                 ett tomt utkast och fylla i manuellt.
               </div>
             )}
             {sources.map((source) => (
               <div
                 key={source.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-[rgba(28,35,48,0.08)] bg-white px-4 py-3"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--line-soft)] bg-white px-4 py-3"
               >
                 <div className="space-y-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 text-sm">
-                    <span className="rounded-full bg-[rgba(221,110,66,0.12)] px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.12em] text-[#b65d3b]">
+                    <span className="rounded-md bg-[rgba(0,156,166,0.08)] px-2 py-0.5 text-xs font-bold uppercase tracking-[0.1em] text-[#009ca6]">
                       {kindLabels[source.kind] ?? 'Fil'}
                     </span>
                     <span className="font-semibold text-[var(--ink-strong)] truncate">{source.name}</span>
@@ -118,30 +121,30 @@ export default function IntakePanel({
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-soft)]">
                     <span
-                      className={`rounded-full px-2.5 py-0.5 font-semibold ${
+                      className={`rounded-md px-2 py-0.5 font-semibold ${
                         source.status === 'error'
-                          ? 'bg-rose-100 text-rose-700'
+                          ? 'bg-[rgba(232,60,99,0.08)] text-[#e83c63]'
                           : source.status === 'needs-reupload'
-                            ? 'bg-amber-100 text-amber-700'
+                            ? 'bg-[rgba(255,229,0,0.15)] text-[#8a7a00]'
                             : source.status === 'processing'
-                              ? 'bg-sky-100 text-sky-700'
-                              : 'bg-emerald-100 text-emerald-700'
+                              ? 'bg-[rgba(0,156,166,0.08)] text-[#009ca6]'
+                              : 'bg-[rgba(0,156,166,0.08)] text-[#0e4e65]'
                       }`}
                     >
                       {statusLabels[source.status] ?? 'Redo'}
                     </span>
                     {source.needsReupload && (
-                      <span className="text-amber-600">Filen sparas inte lokalt och måste väljas igen.</span>
+                      <span className="text-[#e83c63]">Filen sparas inte lokalt och maste valjas igen.</span>
                     )}
                     {source.warnings?.length > 0 && (
-                      <span>{source.warnings.length} notering(ar) från tolkning</span>
+                      <span>{source.warnings.length} notering(ar) fran tolkning</span>
                     )}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => onRemoveSource(source.id)}
-                  className="inline-flex rounded-full border border-[rgba(28,35,48,0.1)] px-3 py-1.5 text-xs font-semibold text-[var(--ink-soft)] transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+                  className="inline-flex rounded-lg border border-[var(--line-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--ink-soft)] transition hover:border-[rgba(232,60,99,0.3)] hover:bg-[rgba(232,60,99,0.04)] hover:text-[#e83c63]"
                 >
                   Ta bort
                 </button>
@@ -157,21 +160,21 @@ export default function IntakePanel({
             rows={9}
             value={pastedText}
             onChange={(event) => onPastedTextChange(event.target.value)}
-            placeholder="Klistra in projektbeskrivning, ansökningstext, workshop-noteringar eller annan relevant kontext."
+            placeholder="Klistra in projektbeskrivning, ansokningstext, workshop-noteringar eller annan relevant kontext."
             className="field-textarea"
           />
         </label>
 
         {/* Config info strip */}
-        <div className="grid gap-3 rounded-[16px] bg-[rgba(28,35,48,0.04)] px-4 py-3 text-sm text-[var(--ink-soft)] sm:grid-cols-3">
+        <div className="grid gap-3 rounded-lg bg-[var(--page-bg)] px-4 py-3 text-sm text-[var(--ink-soft)] sm:grid-cols-3">
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
               Proxy
             </div>
             <div className="mt-0.5 font-semibold text-[var(--ink-strong)] text-xs">{proxyStatus}</div>
           </div>
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
               Autosave
             </div>
             <div className="mt-0.5 font-semibold text-[var(--ink-strong)] text-xs">
@@ -179,16 +182,16 @@ export default function IntakePanel({
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
               Publicering
             </div>
-            <div className="mt-0.5 font-semibold text-[var(--ink-strong)] text-xs">Frontend fungerar på GitHub Pages</div>
+            <div className="mt-0.5 font-semibold text-[var(--ink-strong)] text-xs">Frontend fungerar pa GitHub Pages</div>
           </div>
         </div>
 
         {/* Error message */}
         {generationError && (
-          <div className="rounded-[16px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 flex items-start gap-2.5">
+          <div className="rounded-lg border border-[rgba(232,60,99,0.2)] bg-[rgba(232,60,99,0.04)] px-4 py-3 text-sm text-[#e83c63] flex items-start gap-2.5">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5 flex-shrink-0" aria-hidden="true">
               <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M8 5v3.5M8 10.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -199,7 +202,7 @@ export default function IntakePanel({
 
         {/* Info/success message */}
         {!generationError && uiMessage && (
-          <div className="rounded-[16px] border border-[rgba(31,122,140,0.2)] bg-[rgba(31,122,140,0.06)] px-4 py-3 text-sm text-[#1f6878] flex items-start gap-2.5">
+          <div className="rounded-lg border border-[rgba(0,156,166,0.2)] bg-[rgba(0,156,166,0.04)] px-4 py-3 text-sm text-[#0e4e65] flex items-start gap-2.5">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5 flex-shrink-0" aria-hidden="true">
               <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M8 7v4.5M8 5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -217,12 +220,12 @@ export default function IntakePanel({
             className="btn-primary"
           >
             {isGenerating && <span className="spinner" aria-hidden="true" />}
-            {isGenerating ? 'Genererar utkast…' : 'Generera förändringsteori'}
+            {isGenerating ? 'Genererar utkast...' : 'Generera forandringsteori'}
           </button>
           <button
             type="button"
             onClick={onCreateBlankDraft}
-            className="inline-flex items-center rounded-full border border-[rgba(28,35,48,0.14)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(28,35,48,0.26)] hover:bg-white"
+            className="inline-flex items-center rounded-lg border border-[var(--line-soft)] bg-white px-5 py-3 text-sm font-semibold text-[var(--ink-strong)] transition hover:border-[rgba(0,156,166,0.3)] hover:text-[#009ca6]"
           >
             Starta tomt utkast
           </button>
