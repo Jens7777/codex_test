@@ -77,7 +77,6 @@ const createDraftExport = ({ projectTitle, theory, sourceSummary, warnings, sour
 export default function App() {
   const appConfig = useMemo(() => getAppConfig(), []);
   const [projectTitle, setProjectTitle] = useState('');
-  const [accessCode, setAccessCode] = useState('');
   const [pastedText, setPastedText] = useState('');
   const [sources, setSources] = useState([]);
   const [theory, setTheory] = useState(createEmptyTheory());
@@ -250,7 +249,6 @@ export default function App() {
     }
 
     setProjectTitle('');
-    setAccessCode('');
     setPastedText('');
     setSources([]);
     setTheory(createEmptyTheory());
@@ -291,16 +289,10 @@ export default function App() {
       return;
     }
 
-    if (!accessCode.trim()) {
-      setGenerationError('Skriv in en åtkomstkod som proxyn kan validera.');
-      return;
-    }
-
     setIsGenerating(true);
 
     try {
       const result = await generateTheoryDraft({
-        accessCode: accessCode.trim(),
         locale: LOCALE,
         projectTitle: projectTitle.trim(),
         pastedText,
@@ -406,7 +398,6 @@ export default function App() {
           <div className="print-hidden space-y-6">
             <IntakePanel
               projectTitle={projectTitle}
-              accessCode={accessCode}
               pastedText={pastedText}
               sources={sources}
               generationError={generationError}
@@ -414,7 +405,6 @@ export default function App() {
               isGenerating={isGenerating}
               proxyStatus={proxyStatus}
               onProjectTitleChange={syncProjectTitle}
-              onAccessCodeChange={setAccessCode}
               onPastedTextChange={setPastedText}
               onFilesSelected={handleFilesSelected}
               onRemoveSource={handleRemoveSource}

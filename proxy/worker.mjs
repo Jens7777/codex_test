@@ -140,21 +140,20 @@ const jsonResponse = (request, env, data, status = 200) =>
     }
   });
 
-const getClientKey = (request, accessCode) => {
-  const ip =
+const getClientKey = (request) => {
+  return (
     request.headers.get('cf-connecting-ip') ||
     request.headers.get('x-forwarded-for') ||
     request.headers.get('x-real-ip') ||
-    'unknown';
-
-  return `${ip}:${accessCode}`;
+    'unknown'
+  );
 };
 
-export const checkRateLimit = (request, env, accessCode) => {
+export const checkRateLimit = (request, env) => {
   const limit = Number.parseInt(env.RATE_LIMIT_MAX_REQUESTS || '5', 10);
   const windowMs = Number.parseInt(env.RATE_LIMIT_WINDOW_MS || '60000', 10);
   const now = Date.now();
-  const clientKey = getClientKey(request, accessCode);
+  const clientKey = getClientKey(request);
   const previousEntries = rateLimitStore.get(clientKey) ?? [];
   const activeEntries = previousEntries.filter((timestamp) => now - timestamp < windowMs);
 
@@ -312,7 +311,6 @@ const parseFormValue = (formData, key) => trim(formData.get(key));
 
 export const handleGenerateTheory = async (request, env) => {
   const formData = await request.formData();
-  const accessCode = parseFormValue(formData, 'accessCode');
   const locale = parseFormValue(formData, 'locale') || 'sv';
   const projectTitle = parseFormValue(formData, 'projectTitle');
   const pastedText = parseFormValue(formData, 'pastedText');
@@ -323,15 +321,7 @@ export const handleGenerateTheory = async (request, env) => {
   const pdfFiles = formData.getAll('pdfFiles');
   const imageFiles = formData.getAll('imageFiles');
 
-  if (!accessCode) {
-    return jsonResponse(request, env, { error: 'Åtkomstkod saknas.' }, 400);
-  }
-
-  if (trim(env.ACCESS_CODE) !== accessCode) {
-    return jsonResponse(request, env, { error: 'Fel åtkomstkod.' }, 401);
-  }
-
-  if (!checkRateLimit(request, env, accessCode)) {
+  if (!checkRateLimit(request, env)) {
     return jsonResponse(request, env, { error: 'För många anrop. Prova igen snart.' }, 429);
   }
 

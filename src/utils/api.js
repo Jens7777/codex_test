@@ -11,7 +11,6 @@ const getErrorMessage = async (response) => {
 };
 
 export const generateTheoryDraft = async ({
-  accessCode,
   locale = 'sv',
   projectTitle,
   pastedText,
@@ -20,7 +19,6 @@ export const generateTheoryDraft = async ({
   imageFiles
 }) => {
   const formData = new FormData();
-  formData.append('accessCode', accessCode);
   formData.append('locale', locale);
   formData.append('projectTitle', projectTitle ?? '');
   formData.append('pastedText', pastedText ?? '');

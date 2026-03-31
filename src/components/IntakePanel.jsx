@@ -27,7 +27,6 @@ const formatBytes = (value) => {
 
 export default function IntakePanel({
   projectTitle,
-  accessCode,
   pastedText,
   sources,
   generationError,
@@ -35,7 +34,6 @@ export default function IntakePanel({
   isGenerating,
   proxyStatus,
   onProjectTitleChange,
-  onAccessCodeChange,
   onPastedTextChange,
   onFilesSelected,
   onRemoveSource,
@@ -59,29 +57,17 @@ export default function IntakePanel({
       </div>
 
       <div className="px-6 py-5 space-y-5">
-        {/* Project name + access code */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="space-y-1.5 text-sm">
-            <span className="font-semibold text-[var(--ink-strong)]">Projektnamn</span>
-            <input
-              type="text"
-              value={projectTitle}
-              onChange={(event) => onProjectTitleChange(event.target.value)}
-              placeholder="Exempel: Lokal satsning för ungas psykiska hälsa"
-              className="field-input"
-            />
-          </label>
-          <label className="space-y-1.5 text-sm">
-            <span className="font-semibold text-[var(--ink-strong)]">Åtkomstkod</span>
-            <input
-              type="password"
-              value={accessCode}
-              onChange={(event) => onAccessCodeChange(event.target.value)}
-              placeholder="Koden som proxyn förväntar sig"
-              className="field-input"
-            />
-          </label>
-        </div>
+        {/* Project name */}
+        <label className="block space-y-1.5 text-sm">
+          <span className="font-semibold text-[var(--ink-strong)]">Projektnamn</span>
+          <input
+            type="text"
+            value={projectTitle}
+            onChange={(event) => onProjectTitleChange(event.target.value)}
+            placeholder="Exempel: Lokal satsning för ungas psykiska hälsa"
+            className="field-input"
+          />
+        </label>
 
         {/* File upload area */}
         <div className="rounded-[20px] border border-[rgba(31,122,140,0.2)] bg-[rgba(31,122,140,0.035)] p-4 space-y-3">

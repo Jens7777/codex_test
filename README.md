@@ -1,17 +1,19 @@
-# Forandringsteori Studio
+# Förändringsteori Studio
 
-Ett ombyggt verktyg for att skapa en klassisk forandringsteori utifran uppladdad kontext. Frontend ar byggd som en statisk React/Vite-app for GitHub Pages, medan AI-anropen gar via en separat proxy for att skydda API-nyckeln.
+**Verktyget:** https://jens7777.github.io/codex_test/
 
-## Vad appen gor
+Ett verktyg för att skapa en klassisk förändringsteori utifrån uppladdad kontext. Frontend är byggd som en statisk React/Vite-app för GitHub Pages, medan AI-anropen går via en separat proxy för att skydda API-nyckeln.
+
+## Vad appen gör
 
 - tar emot inklistrad text, `docx`, `pdf` och bilder
 - extraherar text ur Word-filer direkt i browsern
 - skickar underlaget till en proxy som anropar Gemini
-- genererar ett strukturerat utkast for forandringsteori
-- later anvandaren redigera varje sektion manuellt
-- visar en automatisk oversiktsvy over logikkedjan
-- autosparar utkast och kallmetadata i `localStorage`
-- exporterar utkast som JSON och har utskriftsvanlig vy for PDF
+- genererar ett strukturerat utkast för förändringsteori
+- låter användaren redigera varje sektion manuellt
+- visar en automatisk översiktsvy över logikkedjan
+- autosparar utkast och källmetadata i `localStorage`
+- exporterar utkast som JSON och har utskriftsvänlig vy för PDF
 
 ## Frontend lokalt
 
@@ -34,9 +36,9 @@ npm run test
 
 ## GitHub Pages
 
-Workflow finns i [`.github/workflows/deploy-pages.yml`](/C:/Users/jensma/repos/codex_test/.github/workflows/deploy-pages.yml).
+Workflow finns i [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
 
-For att frontend ska prata med rätt proxy i GitHub Actions, satt repository-variabeln:
+För att frontend ska prata med rätt proxy i GitHub Actions, sätt repository-variabeln:
 
 - `VITE_API_BASE_URL`
 
@@ -47,14 +49,13 @@ Workflow bygger med:
 
 ## Proxy
 
-Proxykod finns i [`proxy/worker.mjs`](/C:/Users/jensma/repos/codex_test/proxy/worker.mjs).
+Proxykod finns i [`proxy/worker.mjs`](proxy/worker.mjs).
 
-Se [`proxy/README.md`](/C:/Users/jensma/repos/codex_test/proxy/README.md) och [`proxy/wrangler.toml.example`](/C:/Users/jensma/repos/codex_test/proxy/wrangler.toml.example) for exempel pa deployment med Cloudflare Worker.
+Se [`proxy/README.md`](proxy/README.md) och [`proxy/wrangler.toml.example`](proxy/wrangler.toml.example) för exempel på deployment med Cloudflare Worker.
 
-Nodvandiga proxy-hemligheter:
+Nödvändiga proxy-hemligheter:
 
 - `GEMINI_API_KEY`
-- `ACCESS_CODE`
 
 Viktiga proxy-variabler:
 
