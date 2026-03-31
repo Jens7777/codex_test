@@ -1,6 +1,6 @@
 const rateLimitStore = new Map();
 
-const DEFAULT_MODEL = 'gemini-2.5-pro';
+const DEFAULT_MODEL = 'gemini-2.5-flash';
 const DEFAULT_MAX_FILE_SIZE = 8 * 1024 * 1024;
 const DEFAULT_MAX_TOTAL_SIZE = 20 * 1024 * 1024;
 
